@@ -1,16 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import { sendMessage } from './api/chatbotApi'; // ✅ Corrected import path
 import { 
-  Box, 
-  TextField, 
-  Button, 
-  List, 
-  ListItem, 
-  ListItemText, 
-  Typography,
-  Paper,
-  Container,
-  Avatar
+  Box, TextField, Button, List, ListItem, 
+  ListItemText, Typography, Paper, Container, Avatar 
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
@@ -24,9 +16,7 @@ const ChatInterface = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  useEffect(() => scrollToBottom(), [messages]);
 
   const handleSendMessage = async () => {
     if (!input.trim()) return;
@@ -37,20 +27,9 @@ const ChatInterface = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:3000/chatbot/message', {
-        message: input,
-        userId: 'user123' // You can implement proper user auth later
-      });
-
-      const botMessage = { text: response.data.response, sender: 'bot' };
+      const response = await sendMessage(input);
+      const botMessage = { text: response, sender: 'bot' };
       setMessages(prev => [...prev, botMessage]);
-    } catch (error) {
-      console.error('Error sending message:', error);
-      const errorMessage = { 
-        text: "Sorry, I'm having trouble responding right now.", 
-        sender: 'bot' 
-      };
-      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -89,9 +68,7 @@ const ChatInterface = () => {
               }}>
                 <ListItemText 
                   primary={message.text} 
-                  primaryTypographyProps={{ 
-                    sx: { whiteSpace: 'pre-wrap' } 
-                  }} 
+                  primaryTypographyProps={{ sx: { whiteSpace: 'pre-wrap' } }} 
                 />
               </Box>
               {message.sender === 'user' && (
@@ -102,11 +79,7 @@ const ChatInterface = () => {
           {isLoading && (
             <ListItem sx={{ justifyContent: 'flex-start' }}>
               <Avatar sx={{ bgcolor: 'primary.main', mr: 1 }}>B</Avatar>
-              <Box sx={{ 
-                bgcolor: 'grey.100',
-                p: 1.5,
-                borderRadius: 2
-              }}>
+              <Box sx={{ bgcolor: 'grey.100', p: 1.5, borderRadius: 2 }}>
                 <ListItemText primary="Typing..." />
               </Box>
             </ListItem>
@@ -121,7 +94,6 @@ const ChatInterface = () => {
           multiline
           maxRows={4}
           value={input}
-        //   onChange={(e) => setInput(e.value)}
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="Type your message..."

@@ -1,15 +1,11 @@
 import React from 'react';
-import ChatInterface from './ChatInterface';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-
-const theme = createTheme();
+import ChatInterface from './ChatInterface'; // Ensure this path is correct
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <div className="App">
       <ChatInterface />
-    </ThemeProvider>
+    </div>
   );
 }
 
