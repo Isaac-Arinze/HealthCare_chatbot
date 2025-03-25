@@ -1,27 +1,14 @@
-import { IsNotEmpty, IsString, IsOptional, IsUUID } from 'class-validator';
+import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ChatMessageDto {
-  @ApiProperty({
-    description: 'The user message content',
-    example: 'What are the visiting hours?',
-  })
-  @IsNotEmpty()
+  @ApiProperty({ description: 'User message', example: 'Hello, how are you?' })
   @IsString()
+  @IsNotEmpty()
   message: string;
 
-  @ApiProperty({
-    description: 'The user ID or session ID',
-    example: 'c58f986b-db06-4d72-9f12-f56b9e893c3b',
-  })
+  @ApiProperty({ description: 'User ID', example: 'user123' })
+  @IsString()
   @IsNotEmpty()
-  @IsUUID()
   userId: string;
-
-  @ApiProperty({
-    description: 'The conversation context',
-    required: false,
-  })
-  @IsOptional()
-  context?: Record<string, any>;
 }

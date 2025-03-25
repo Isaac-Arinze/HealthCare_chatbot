@@ -1,12 +1,20 @@
-// src/chatbot/chatbot.module.ts
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ChatbotController } from './chatbot.controller';
 import { ChatbotService } from './chatbot.service';
+import { ChatbotController } from './chatbot.controller';
+import { ChatbotGateway } from './chatbot.gateway';
 
 @Module({
-  imports: [ConfigModule.forRoot()], // Load environment variables
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: [
+        `.env.${process.env.NODE_ENV}`,
+        '.env'
+      ]
+    })
+  ],
   controllers: [ChatbotController],
-  providers: [ChatbotService],
+  providers: [ChatbotService, ChatbotGateway]
 })
 export class ChatbotModule {}
